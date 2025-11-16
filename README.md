@@ -1,45 +1,53 @@
-# [Chatbot Whirlpool](https://hub.docker.com/r/tarsislimafatec/chatbot_fatec_whirlpool)
-
-Assistente Virtual Inteligente
+# 🤖 Chatbot Whirlpool: Assistente Virtual Inteligente (Versão Estável)
 
 ## Visão Geral do Projeto
 
-Este projeto visa desenvolver um chatbot inteligente para auxiliar os clientes da Whirlpool com dúvidas sobre produtos (por exemplo, máquinas de lavar, fogões). O chatbot utiliza Processamento de Linguagem Natural (PLN) para interpretar perguntas e fornecer respostas relevantes, simulando a interação humana. O projeto integra modelos avançados de IA (Gemini) para uma comunicação aprimorada com o usuário.
+Este projeto consiste no desenvolvimento de um chatbot inteligente para auxiliar clientes com dúvidas sobre produtos Whirlpool (máquinas de lavar, fogões, etc.). O assistente utiliza Processamento de Linguagem Natural (PLN) para interpretar as perguntas dos usuários e gerar respostas relevantes, simulando uma interação humana.
 
-## Tecnologias Utilizadas
+Esta versão é a **implementação estável** que integra o modelo Google Gemini com persistência de histórico em banco de dados MySQL.
 
-- Python
-- Flask
-- HTML
-- CSS
-- API do Google Gemini (para integração avançada de IA)
+## ⚙️ Tecnologias Utilizadas
 
-## Contribuidores
+* **Linguagem:** Python
+* **Framework Web:** Flask
+* **Inteligência Artificial:** API do Google Gemini (gemini-2.5-flash)
+* **Banco de Dados:** MySQL (para histórico de conversas)
+* **Gerenciamento de Dependências:** `pip` e `requirements.txt`
 
-- [Luiz Henrique Crepaldi](https://github.com/LuizHenrique529) (Product Owner)
-- [Matheus Armelindo](https://github.com/armelindo428) (Scrum Master)
-- [Tarsis Lima](https://github.com/tarsislimadev) (Back-end)
-- [Thiago Plancke](https://github.com/thiagoplancke) (Back-end)
-- [Mateus Linardi](https://github.com/mateozin) (Back-end)
-- [Kevin Walker](https://github.com/kevin64dsu-zx) (Front-end)
-- [Emannuel Paulo](https://github.com/emannuelp-boldrin) (Designer)
+---
 
-## Como rodar o projeto
+## 🚀 Como Rodar o Projeto (Deploy Local)
 
-Certifique-se de ter [Docker](https://docs.docker.com/engine/install/) instalado.
+Esta versão é projetada para rodar diretamente em um ambiente Python.
 
-Para puxar a imagem Docker mais recente do Docker Hub, use o seguinte comando:
+### Pré-requisitos
+
+1.  **Python 3.9+** instalado.
+2.  **MySQL Server** rodando (na porta 3306, se o `db_connector.py` usar `localhost`).
+3.  **Chave de API:** Uma chave ativa do Google Gemini.
+
+### 1. Configuração do Ambiente
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/kevin64dsu-zx/Chat_bot_new.git](https://github.com/kevin64dsu-zx/Chat_bot_new.git)
+    cd Chat_bot_new
+    ```
+2.  **Instale as dependências:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Configure o Ambiente:**
+    Crie um arquivo na raiz do projeto chamado **`.env`** e insira sua chave de API e as credenciais do banco de dados (os nomes das variáveis devem ser os mesmos usados no `db_connector.py` e `port_ia.py`):
+    ```env
+    # Exemplo do arquivo .env
+    GOOGLE_API_KEY="SUA_CHAVE_DO_GEMINI_AQUI"
+    # Adicione as credenciais do MySQL se forem usadas no código (ex: USER, PASSWORD, HOST)
+    ```
+
+### 2. Execução
+
+Execute o arquivo principal para iniciar o servidor Flask:
 
 ```bash
-docker pull tarsislimafatec/chatbot_fatec_whirlpool
-```
-
-Certifique-se de ter sua chave de [API do Google Gemini](https://aistudio.google.com/api-keys) pronta.
-
-Substitua `"SUA_CHAVE_API_GEMINI"` pela sua chave de API real do Google Gemini. 
-
-```bash
-docker run -p 5000:5000 -e GOOGLE_API_KEY="SUA_CHAVE_API_GEMINI" tarsislimafatec/chatbot_fatec_whirlpool
-```
-
-O chatbot estará acessível em `http://localhost:5000`.
+python seu_arquivo_principal.py # (Substitua pelo nome do seu arquivo Flask, geralmente 'app.py')

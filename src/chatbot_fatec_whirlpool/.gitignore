@@ -1,7 +1,17 @@
-# Ambiente virtual
-.venv/
+# Python
 __pycache__/
 *.pyc
+.pytest_cache
+venv/
+.venv/
 
-# Configurações locais
+# Ambientes Locais e Arquivos Temporários
+.DS_Store
+.idea/
+*.vscode/
+
+# Dependências
+/node_modules
+
+# Arquivos Sensíveis (CRUCIAL!)
 .env

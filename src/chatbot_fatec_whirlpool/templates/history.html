@@ -1,23 +1,75 @@
-<!-- templates/history.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Histórico do Chat</title>
+<meta charset="UTF-8">
+<title>Histórico do Chat</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #888;
+}
+th {
+  background-color: #19c37d;
+  color: white;
+}
+tr:nth-child(even) {
+  background-color: #444654;
+  color: #ececec;
+}
+tr:nth-child(odd) {
+  background-color: #565869;
+  color: #ececec;
+}
+a.button-back, button.button-clear {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 18px;
+  background-color: #19c37d;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+a.button-back:hover, button.button-clear:hover {
+  background-color: #15a76c;
+}
+</style>
 </head>
 <body>
-    <h1>Histórico de Conversas</h1>
-    {% if history %}
-        <ul>
-        {% for entry in history %}
-            <li>
-                <strong>{{ entry.role }}:</strong> {{ entry.content }} 
-                <em>({{ entry.timestamp }})</em>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>Nenhuma mensagem registrada ainda.</p>
-    {% endif %}
+<h1>Histórico de Conversas</h1>
+
+{% if history %}
+<table>
+  <tr>
+    <th>Data/Hora</th>
+    <th>Quem</th>
+    <th>Mensagem</th>
+  </tr>
+  {% for entry in history %}
+  <tr>
+    <td>{{ entry.timestamp }}</td>
+    <td>{{ entry.role }}</td>
+    <td>{{ entry.content }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- FIX AQUI -->
+<form action="{{ url_for('limpar_historico_route') }}" method="post">
+    <button type="submit" class="button-clear">Limpar Histórico</button>
+</form>
+{% else %}
+<p>Nenhuma mensagem registrada ainda.</p>
+{% endif %}
+
+<a class="button-back" href="/">Voltar</a>
 </body>
 </html>

@@ -1,72 +1,99 @@
 import mysql.connector
+from mysql.connector import Error
 from datetime import datetime
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Carrega variáveis do .env
+# Carregar .env mesmo executando fora da pasta
+ENV_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
+load_dotenv(ENV_PATH)
 
 DB_CONFIG = {
-    'host': os.getenv('MYSQL_HOST'),
-    'user': os.getenv('MYSQL_USER'),
-    'password': os.getenv('MYSQL_PASSWORD'),
-    'database': os.getenv('MYSQL_DATABASE'),
-    'port': int(os.getenv('MYSQL_PORT')),
+    'host': os.getenv("MYSQL_HOST"),
+    'port': int(os.getenv("MYSQL_PORT")),
+    'user': os.getenv("MYSQL_USER"),
+    'password': os.getenv("MYSQL_PASSWORD"),
+    'database': os.getenv("MYSQL_DATABASE")
 }
 
-def connect_db():
+
+def conectar_bd():
+    """Conecta ao banco e retorna a conexão."""
     try:
         conn = mysql.connector.connect(**DB_CONFIG)
         return conn
-    except mysql.connector.Error as err:
-        print(f"Erro ao conectar no banco: {err}")
+    except Error as e:
+        print(f"Erro ao conectar ao BD: {e}")
+        print("DEBUG CONFIG:", DB_CONFIG)
         return None
 
-def ensure_table_exists():
-    conn = connect_db()
-    if conn is None:
-        return
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS chat_history (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            timestamp DATETIME,
-            role VARCHAR(50),
-            content TEXT
-        )
-    """)
-    conn.commit()
-    cursor.close()
-    conn.close()
 
-def log_message(role, content):
-    conn = connect_db()
-    if conn is None:
+# ---------- Histórico ----------
+def salvar_historico(role, mensagem):
+    conn = conectar_bd()
+    if not conn:
         return
-    cursor = conn.cursor()
-    sql = "INSERT INTO chat_history (timestamp, role, content) VALUES (%s, %s, %s)"
+    cursor = conn.cursor(dictionary=True)
     try:
-        cursor.execute(sql, (datetime.now(), role, content[:5000]))
+        cursor.execute(
+            "INSERT INTO historico (role, content, timestamp) VALUES (%s, %s, %s)",
+            (role, mensagem, datetime.now())
+        )
         conn.commit()
-    except mysql.connector.Error as err:
-        print(f"Erro ao registrar mensagem: {err}")
+    except Error as e:
+        print(f"Erro ao salvar histórico: {e}")
     finally:
         cursor.close()
         conn.close()
 
-def get_history():
-    conn = connect_db()
-    if conn is None:
+
+def buscar_historico():
+    conn = conectar_bd()
+    if not conn:
         return []
     cursor = conn.cursor(dictionary=True)
     try:
-        cursor.execute("SELECT timestamp, role, content FROM chat_history ORDER BY timestamp ASC")
+        cursor.execute("SELECT * FROM historico ORDER BY timestamp ASC")
         return cursor.fetchall()
-    except mysql.connector.Error as err:
-        print(f"Erro ao recuperar histórico: {err}")
+    except Error as e:
+        print(f"Erro ao buscar histórico: {e}")
         return []
     finally:
         cursor.close()
         conn.close()
 
-# Garante que a tabela existe ao importar o módulo
-ensure_table_exists()
+
+def limpar_historico():
+    conn = conectar_bd()
+    if not conn:
+        return
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM historico")
+        conn.commit()
+    except Error as e:
+        print(f"Erro ao limpar histórico: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# ---------- Produtos ----------
+def buscar_produto(query):
+    conn = conectar_bd()
+    if not conn:
+        return []
+    cursor = conn.cursor(dictionary=True)
+    try:
+        like = f"%{query}%"
+        cursor.execute(
+            "SELECT * FROM produtos WHERE nome LIKE %s OR marca LIKE %s",
+            (like, like)
+        )
+        return cursor.fetchall()
+    except Error as e:
+        print(f"Erro ao buscar produto: {e}")
+        return []
+    finally:
+        cursor.close()
+        conn.close()
