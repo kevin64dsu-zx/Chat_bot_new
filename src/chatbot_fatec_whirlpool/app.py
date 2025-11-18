@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+
 from flask import Flask, request, render_template, redirect, url_for
 from port_ia import gerar_resposta_usuario, obter_historico
 from db_connector import limpar_historico  # função que vamos criar no DB se não existir
