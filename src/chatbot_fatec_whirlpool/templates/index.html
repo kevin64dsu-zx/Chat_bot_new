@@ -3,43 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seu Atendimento - Whirlpool</title>
+    <title>Chatbot Whirlpool</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<div class="container">
-    <h1>Assistente Whirlpool</h1>
+    <div class="container">
+        <h1>Whirlpool Chatbot</h1>
 
-    <div style="text-align:right; margin-bottom:10px;">
-        <a href="/historico">
-            <button>Ver Histórico</button>
-        </a>
-    </div>
-
-    <div id="chat" class="chat-box">
-        <!-- Aqui é onde as mensagens serão carregadas -->
-    </div>
-
-    <!-- INDICADOR DE DIGITAÇÃO COM EMOJI -->
-    <div id="typing-indicator" class="message bot">
-        <!-- O emoji do bot -->
-        <span class="avatar-emoji">🤖</span> 
-        <div class="message-content" style="display: flex; align-items: center;">
-            <span class="typing-text">Pensando...</span>
-            <div class="typing-dots">
-                <div class="dot-1"></div>
-                <div class="dot-2"></div>
-                <div class="dot-3"></div>
-            </div>
+        <div class="chat-box" id="chat-box">
+            <!-- Mensagens aparecerão aqui -->
         </div>
-    </div>
-    
-    <div class="input-area">
-        <input id="input" placeholder="Digite sua mensagem..." />
-        <button onclick="enviar()">Enviar</button>
-    </div>
-</div>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+        <form id="chat-form">
+            <input type="text" id="mensagem" placeholder="Digite sua mensagem..." autocomplete="off">
+            <button type="submit">Enviar</button>
+            <button type="button" id="historico-btn">Histórico</button>
+        </form>
+
+        <button id="rag-btn">Perguntar ao RAG</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
